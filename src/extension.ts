@@ -1,74 +1,91 @@
-/*---------------------------------------------------------
- * Copyright (C) Microsoft Corporation. All rights reserved.
- *--------------------------------------------------------*/
+import path = require("path");
 
-import * as vscode from 'vscode';
+import {
+  ExtensionContext,
+  RelativePattern,
+  workspace,
+} from "vscode";
+import { Extension } from "./lib/extension";
+import { Log } from "./utils/console";
 
-export function activate(context: vscode.ExtensionContext) {
+const CONFIG_FILE_GLOB = "iconsauce.config.{js,cjs,mjs,ts}";
 
-	const provider1 = vscode.languages.registerCompletionItemProvider('plaintext', {
+export function activate(context: ExtensionContext) {
+  const configPattern = new RelativePattern(
+    workspace.workspaceFolders?.[0].uri.fsPath as string,
+    `**/${CONFIG_FILE_GLOB}`);
 
-		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+  Log.info("Init extension...");
+  const extenstion = new Extension(context, configPattern);
+  
+  extenstion.init();
 
-			// a simple completion item which inserts `Hello World!`
-			const simpleCompletion = new vscode.CompletionItem('Hello World!');
+  Log.info("Activate iconsause intellisense");
+  
 
-			// a completion item that inserts its text as snippet,
-			// the `insertText`-property is a `SnippetString` which will be
-			// honored by the editor.
-			const snippetCompletion = new vscode.CompletionItem('Good part of the day');
-			snippetCompletion.insertText = new vscode.SnippetString('Good ${1|morning,afternoon,evening|}. It is ${1}, right?');
-			const docs : any = new vscode.MarkdownString("Inserts a snippet that lets you select [link](x.ts).");
-			snippetCompletion.documentation = docs;
-			docs.baseUri = vscode.Uri.parse('http://example.com/a/b/c/');
+  // const provider1 = languages.registerCompletionItemProvider('plaintext', {
 
-			// a completion item that can be accepted by a commit character,
-			// the `commitCharacters`-property is set which means that the completion will
-			// be inserted and then the character will be typed.
-			const commitCharacterCompletion = new vscode.CompletionItem('console');
-			commitCharacterCompletion.commitCharacters = ['.'];
-			commitCharacterCompletion.documentation = new vscode.MarkdownString('Press `.` to get `console.`');
+  // 	provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext) {
 
-			// a completion item that retriggers IntelliSense when being accepted,
-			// the `command`-property is set which the editor will execute after 
-			// completion has been inserted. Also, the `insertText` is set so that 
-			// a space is inserted after `new`
-			const commandCompletion = new vscode.CompletionItem('new');
-			commandCompletion.kind = vscode.CompletionItemKind.Keyword;
-			commandCompletion.insertText = 'new ';
-			commandCompletion.command = { command: 'editor.action.triggerSuggest', title: 'Re-trigger completions...' };
+  // 		// a simple completion item which inserts `Hello World!`
+  // 		const simpleCompletion = new CompletionItem('Hello World!');
 
-			// return all completion items as array
-			return [
-				simpleCompletion,
-				snippetCompletion,
-				commitCharacterCompletion,
-				commandCompletion
-			];
-		}
-	});
+  // 		// a completion item that inserts its text as snippet,
+  // 		// the `insertText`-property is a `SnippetString` which will be
+  // 		// honored by the editor.
+  // 		const snippetCompletion = new CompletionItem('Good part of the day');
+  // 		snippetCompletion.insertText = new SnippetString('Good ${1|morning,afternoon,evening|}. It is ${1}, right?');
+  // 		const docs : any = new MarkdownString("Inserts a snippet that lets you select [link](x.ts).");
+  // 		snippetCompletion.documentation = docs;
+  // 		docs.baseUri = Uri.parse('http://example.com/a/b/c/');
 
-	const provider2 = vscode.languages.registerCompletionItemProvider(
-		'plaintext',
-		{
-			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+  // 		// a completion item that can be accepted by a commit character,
+  // 		// the `commitCharacters`-property is set which means that the completion will
+  // 		// be inserted and then the character will be typed.
+  // 		const commitCharacterCompletion = new CompletionItem('console');
+  // 		commitCharacterCompletion.commitCharacters = ['.'];
+  // 		commitCharacterCompletion.documentation = new MarkdownString('Press `.` to get `console.`');
 
-				// get all text until the `position` and check if it reads `console.`
-				// and if so then complete if `log`, `warn`, and `error`
-				const linePrefix = document.lineAt(position).text.substr(0, position.character);
-				if (!linePrefix.endsWith('console.')) {
-					return undefined;
-				}
+  // 		// a completion item that retriggers IntelliSense when being accepted,
+  // 		// the `command`-property is set which the editor will execute after
+  // 		// completion has been inserted. Also, the `insertText` is set so that
+  // 		// a space is inserted after `new`
+  // 		const commandCompletion = new CompletionItem('new');
+  // 		commandCompletion.kind = CompletionItemKind.Keyword;
+  // 		commandCompletion.insertText = 'new ';
+  // 		commandCompletion.command = { command: 'editor.action.triggerSuggest', title: 'Re-trigger completions...' };
 
-				return [
-					new vscode.CompletionItem('log', vscode.CompletionItemKind.Method),
-					new vscode.CompletionItem('warn', vscode.CompletionItemKind.Method),
-					new vscode.CompletionItem('error', vscode.CompletionItemKind.Method),
-				];
-			}
-		},
-		'.' // triggered whenever a '.' is being typed
-	);
+  // 		// return all completion items as array
+  // 		return [
+  // 			simpleCompletion,
+  // 			snippetCompletion,
+  // 			commitCharacterCompletion,
+  // 			commandCompletion
+  // 		];
+  // 	}
+  // });
 
-	context.subscriptions.push(provider1, provider2);
+  // const provider2 = languages.registerCompletionItemProvider(
+  // 	'',
+  // 	{
+  // 		provideCompletionItems(document: TextDocument, position: Position) {
+
+  // 			// get all text until the `position` and check if it reads `console.`
+  // 			// and if so then complete if `log`, `warn`, and `error`
+  // 			const linePrefix = document.lineAt(position).text.slice(0, position.character);
+  // 			if (!linePrefix.endsWith('console.')) {
+  // 				return undefined;
+  // 			}
+
+  // 			return [
+  // 				new CompletionItem('log', CompletionItemKind.Method),
+  // 				new CompletionItem('warn', CompletionItemKind.Method),
+  // 				new CompletionItem('error', CompletionItemKind.Method),
+  // 			];
+  // 		}
+  // 	},
+  // 	'.' // triggered whenever a '.' is being typed
+  // );
 }
+
+export function deactivate() {}

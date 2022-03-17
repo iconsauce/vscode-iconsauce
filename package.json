@@ -1,7 +1,7 @@
 {
-  "name": "iconsauce-vscode-extension",
-  "displayName": "Completion for Iconsauce",
-  "description": "...",
+  "name": "vscode-iconsauce",
+  "displayName": "Autocompletion for Iconsauce",
+  "description": "Iconsauce autocompletion for VS Code",
   "icon": "res/iconsauce.png",
   "version": "0.0.2",
   "private": true,

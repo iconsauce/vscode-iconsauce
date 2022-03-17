@@ -1,2 +1,2 @@
-# iconsauce-vscode-extension README
+# vscode-iconsauce README
 +

@@ -12,7 +12,6 @@ export class Completition {
     }
 
     registerSelector() {
-        // console.log(this.documentSelector);
         return languages.registerCompletionItemProvider(
             this.documentSelector,
             {

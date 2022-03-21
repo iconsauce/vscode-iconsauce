@@ -11,7 +11,6 @@ import {
   workspace,
 } from "vscode";
 import { Log } from "../utils/console";
-import { fileTypes } from "../utils/utils";
 import { Completition } from "./completition";
 
 export class Extension {
@@ -20,12 +19,14 @@ export class Extension {
   private configFilePattern: GlobPattern;
   private dictionary: Map<string, PathLike>;
   private configPath: string | undefined;
+  private documentSelector: DocumentSelector;
 
   constructor(context: ExtensionContext, configFilePattern: GlobPattern) {
     this.context = context;
     this.disposal = [];
     this.configFilePattern = configFilePattern;
     this.dictionary = new Map();
+    this.documentSelector = '';
   }
 
   init() {
@@ -43,10 +44,16 @@ export class Extension {
   }
 
   update() {
-    Log.info("Loading config file");
     if (this.configPath) {
+      this.disposal.forEach(i => i.dispose());
+      this.disposal.length = 0; 
+
       delete require.cache[this.configPath];
       const config = new IconsauceConfig(this.configPath);
+
+      const d: DocumentFilter[] = [];
+      config.content.forEach(v => d.push( <DocumentFilter>{ pattern: v.replace('./', '**/') }));
+      this.documentSelector = d;
 
       config.plugin.forEach((p) => {
         if (!isAbsolute(p.path.toString()) && !!this.configPath) {
@@ -107,10 +114,7 @@ export class Extension {
 
   registerCompletition(): Disposable[] {
     const disposables: Disposable[] = [];
-    const ext: DocumentSelector = <DocumentFilter>(
-      Object.entries(fileTypes).map((d) => d[0])
-    );
-    const completition = new Completition(this, ext);
+    const completition = new Completition(this, this.documentSelector);
     disposables.push(completition.registerSelector());
     return disposables;
   }

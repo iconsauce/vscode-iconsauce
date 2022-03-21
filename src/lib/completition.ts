@@ -6,6 +6,7 @@ import {
   Position,
   TextDocument,
 } from "vscode";
+import { Log } from "../utils/console";
 import { Extension } from "./extension";
 
 export class Completition {
@@ -19,13 +20,15 @@ export class Completition {
 
   registerSelector() {
     return languages.registerCompletionItemProvider(this.documentSelector, {
-      provideCompletionItems: (document: TextDocument, position: Position) => {
+      provideCompletionItems: (_document: TextDocument, _position: Position) => {
+        Log.info('build completition');
         const completitions: CompletionItem[] = [];
         for (const selector of this.extension.getDictionary().keys()) {
           completitions.push(
             new CompletionItem(selector, CompletionItemKind.Unit)
           );
         }
+        Log.info('finish');
         return completitions;
       },
     });

@@ -1,5 +1,3 @@
-import path = require("path");
-
 import { ExtensionContext, RelativePattern, workspace } from "vscode";
 import { Extension } from "./lib/extension";
 import { Log } from "./utils/console";

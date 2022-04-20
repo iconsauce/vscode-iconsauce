@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/iconsauce/vscode-iconsauce"
   },
+  "publisher": "iconsauce",
   "engines": {
     "vscode": "^1.32.0"
   },

@@ -1,7 +1,7 @@
 {
-  "name": "vscode-iconsauce",
-  "displayName": "Autocompletion for Iconsauce",
-  "description": "Iconsauce autocompletion for VS Code",
+  "name": "vscode-iconsauce-autocomplete",
+  "displayName": "Iconsauce Autocomplete",
+  "description": "Iconsauce autocompletion tool for VS Code",
   "icon": "res/iconsauce.png",
   "version": "0.0.2",
   "private": true,
@@ -22,7 +22,7 @@
   "main": "./out/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "rimraf out && esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:@maggioli-design-system/svg-icons/package.json --format=cjs --platform=node",
+    "esbuild-base": "rimraf out && esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "compile": "tsc -p ./",

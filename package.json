@@ -3,7 +3,7 @@
   "displayName": "Iconsauce Autocomplete",
   "description": "Iconsauce autocompletion tool for VS Code",
   "icon": "res/iconsauce.png",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "license": "MIT",
   "repository": {

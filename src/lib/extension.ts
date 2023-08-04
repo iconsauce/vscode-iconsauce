@@ -45,9 +45,6 @@ export class Extension {
 
   update() {
     if (this.configPath) {
-      this.disposal.forEach(i => i.dispose());
-      this.disposal.length = 0; 
-
       delete require.cache[this.configPath];
       const config = new IconsauceConfig(this.configPath);
 
@@ -61,6 +58,8 @@ export class Extension {
         }
       });
       build(config).then((data) => {
+        this.disposal.forEach(i => i.dispose());
+        this.disposal.length = 0; 
         if (!data) return;
 
         this.dictionary = data.dictionary;
@@ -94,20 +93,19 @@ export class Extension {
       this.update();
     });
 
-    // when change vscode configuration should regenerate disposables
-    workspace.onDidChangeConfiguration(
-      () => {
-        Log.info("Global Configuration Changed, Reloading...");
-        this.update();
-      },
-      null,
-      this.context.subscriptions
-    );
+    // // when change vscode configuration should regenerate disposables
+    // workspace.onDidChangeConfiguration(
+    //   () => {
+    //     Log.info("Global Configuration Changed, Reloading...");
+    //     this.update();
+    //   },
+    //   null,
+    //   this.context.subscriptions
+    // );
   }
 
   register() {
     const disposable = [...this.registerCompletition()];
-
     this.context.subscriptions.push(...disposable);
     this.disposal.push(...disposable);
   }

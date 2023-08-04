@@ -1,6 +1,6 @@
 # Iconsauce Autocomplete
 
-[![Version](https://vsmarketplacebadge.apphb.com/version-short/iconsauce.iconsauce-autocomplete.svg)](https://marketplace.visualstudio.com/items?itemName=iconsauce.iconsauce-autocomplete)
+[![Version](https://img.shields.io/visual-studio-marketplace/v/iconsauce.vscode-iconsauce-autocomplete)](https://marketplace.visualstudio.com/items?itemName=iconsauce.iconsauce-autocomplete)
 
 Iconsauce Autocomplete add support completion for [Iconsauce](https://iconsauce.github.io/docs/).
 
